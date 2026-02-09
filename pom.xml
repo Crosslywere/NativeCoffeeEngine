@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <native.src.path>${project.basedir}/src/main/native</native.src.path>
         <native.build.path>${project.basedir}/target/native</native.build.path>
-        <main.class>io.coffee_engine.CoffeeEngine</main.class>
+        <entrypoint.class>io.coffee_engine.CoffeeEngine</entrypoint.class>
     </properties>
 
     <dependencies>
@@ -24,7 +24,6 @@
             <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -37,7 +36,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>${main.class}</mainClass>
+                            <mainClass>${entrypoint.class}</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
