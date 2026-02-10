@@ -5,9 +5,13 @@ add_subdirectory(src/main/native/vendor/glfw)
 include_directories(
     ${JNI_INCLUDE_DIRS}
     src/main/native
+    src/main/native/vendor/glad/include
 )
 file(GLOB NATIVE_FILES src/main/native/*.cpp)
-add_library(coffee SHARED ${NATIVE_FILES})
+add_library(coffee SHARED
+    ${NATIVE_FILES}
+    src/main/native/vendor/glad/src/glad.c
+)
 target_link_libraries(coffee glfw)
 # Post build copy
 get_target_property(LIB_OUTPUT coffee ARCHIVE_OUTPUT_DIRECTORY)
