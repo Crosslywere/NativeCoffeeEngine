@@ -11,6 +11,11 @@ public class CoffeeEngine {
     static native boolean Test();
 
     public static void main(String... args) {
+        try (Window window = Window.createWindow()) {
+            window.run();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("Native Coffee Engine ran!");
     }
 }
