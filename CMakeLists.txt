@@ -33,7 +33,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 else()
     message(FATAL_ERROR "Unsupported operating system: ${CMAKE_SYSTEM_NAME}")
 endif()
-add_custom_target(copy_libs ALL
+add_custom_target(copy_to_resources ALL
     COMMAND ${CMAKE_COMMAND} -E make_directory ${DESTINATION_DIR}
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:coffee>
