@@ -1,18 +1,26 @@
 cmake_minimum_required(VERSION 3.28)
 project(NativeCoffeeEngine LANGUAGES C CXX)
 find_package(JNI REQUIRED)
+set(NATIVE_DIR "${CMAKE_SOURCE_DIR}/src/main/native")
 add_subdirectory(src/main/native/vendor/glfw)
 include_directories(
     ${JNI_INCLUDE_DIRS}
-    src/main/native
-    src/main/native/vendor/glad/include
+    ${NATIVE_DIR}
+    "${NATIVE_DIR}/vendor/glad/include"
 )
-file(GLOB NATIVE_FILES src/main/native/*.cpp)
+file(GLOB NATIVE_FILES "${NATIVE_DIR}/*.cpp")
+# FOR Testing
 add_library(coffee SHARED
     ${NATIVE_FILES}
-    src/main/native/vendor/glad/src/glad.c
+    "${NATIVE_DIR}/vendor/glad/src/glad.c"
 )
 target_link_libraries(coffee glfw)
+# Window Management
+add_library(coffee_window SHARED
+    "${NATIVE_DIR}/WindowImpl.cpp"
+    "${NATIVE_DIR}/vendor/glad/src/glad.c"
+)
+target_link_libraries(coffee_window glfw)
 # Post build copy
 get_target_property(LIB_OUTPUT coffee ARCHIVE_OUTPUT_DIRECTORY)
 set(NATIVE_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/src/main/resources/native")
@@ -29,5 +37,6 @@ add_custom_target(copy_libs ALL
     COMMAND ${CMAKE_COMMAND} -E make_directory ${DESTINATION_DIR}
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:coffee>
+        $<TARGET_FILE:coffee_window>
         ${DESTINATION_DIR}
 )
