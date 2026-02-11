@@ -12,6 +12,8 @@ public final class Window implements Closeable {
 
     private static native Window nCreateWindow();
 
+    private static native void nRun(long handle);
+
     private final long handle;
 
     private Window(long handle) {
@@ -22,7 +24,9 @@ public final class Window implements Closeable {
         return nCreateWindow();
     }
 
-    public native void run();
+    public void run() {
+        nRun(this.handle);
+    }
 
     public native void close();
 

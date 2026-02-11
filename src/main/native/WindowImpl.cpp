@@ -1,13 +1,16 @@
 #include <io_coffee_engine_Window.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <map>
+
+static inline std::map<const jlong, GLFWwindow *> managed_windows;
 
 static inline GLFWwindow *getWindowHandleFromInstance(JNIEnv *env, jobject inst)
 {
     jclass clazz = env->FindClass("io/coffee_engine/Window");
     jfieldID field = env->GetFieldID(clazz, "handle", "J");
     jlong handle = env->GetLongField(inst, field);
-    return reinterpret_cast<GLFWwindow *>(handle);
+    return managed_windows.at(handle);
 }
 
 JNIEXPORT jobject JNICALL Java_io_coffee_1engine_Window_nCreateWindow(JNIEnv *env, jclass cls)
@@ -31,12 +34,13 @@ JNIEXPORT jobject JNICALL Java_io_coffee_1engine_Window_nCreateWindow(JNIEnv *en
         env->FatalError("Failed to load OpenGL!");
     }
     jmethodID constructor = env->GetMethodID(cls, "<init>", "(J)V");
-    return env->NewObject(cls, constructor, reinterpret_cast<jlong>(window));
+    const jlong handle = reinterpret_cast<jlong>(window);
+    managed_windows.insert(std::make_pair(handle, window));
+    return env->NewObject(cls, constructor, handle);
 }
-
-JNIEXPORT void JNICALL Java_io_coffee_1engine_Window_run(JNIEnv *env, jobject inst)
+JNIEXPORT void JNICALL Java_io_coffee_1engine_Window_nRun(JNIEnv *env, jclass, jlong handle)
 {
-    GLFWwindow *window = getWindowHandleFromInstance(env, inst);
+    GLFWwindow *window = managed_windows.at(handle);
     if (!window)
     {
         env->FatalError("Failed to get proper handle for run");

@@ -17,11 +17,11 @@ JNIEXPORT jobject JNICALL Java_io_coffee_1engine_Window_nCreateWindow
 
 /*
  * Class:     io_coffee_engine_Window
- * Method:    run
- * Signature: ()V
+ * Method:    nRun
+ * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_io_coffee_1engine_Window_run
-  (JNIEnv *, jobject);
+JNIEXPORT void JNICALL Java_io_coffee_1engine_Window_nRun
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     io_coffee_engine_Window
