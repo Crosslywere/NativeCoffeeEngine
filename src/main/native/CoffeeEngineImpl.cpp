@@ -40,14 +40,10 @@ JNIEXPORT jboolean JNICALL Java_io_coffee_1engine_CoffeeEngine_Test(JNIEnv *env,
         const std::chrono::duration<double> duration = std::chrono::steady_clock::now() - start;
         const auto sec = duration.count();
         if (sec >= 5)
-        {
             glfwSetWindowShouldClose(window, true);
-        }
         else
-        {
-            sprintf(timeBuffer, "%.1fs", 5 - sec);
-            glfwSetWindowTitle(window, (title + timeBuffer).c_str());
-        }
+            sprintf(timeBuffer, "%.1fs", std::max(5 - sec, 0.0));
+        glfwSetWindowTitle(window, (title + timeBuffer).c_str());
         glClearColor(std::sin(sec), std::cos(sec), 1, 1);
         glClear(GL_COLOR_BUFFER_BIT);
         glfwSwapBuffers(window);
