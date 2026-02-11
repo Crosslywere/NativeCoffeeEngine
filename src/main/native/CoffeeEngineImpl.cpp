@@ -7,7 +7,8 @@
 
 JNIEXPORT jboolean JNICALL Java_io_coffee_1engine_CoffeeEngine_Test(JNIEnv *env, jclass clazz)
 {
-    if (!glfwInit()) {
+    if (!glfwInit())
+    {
         std::cout << "Test failed on init" << std::endl;
         return false;
     }
@@ -17,14 +18,16 @@ JNIEXPORT jboolean JNICALL Java_io_coffee_1engine_CoffeeEngine_Test(JNIEnv *env,
     std::string title = "Test Window will close in ";
     char timeBuffer[5];
     std::sprintf(timeBuffer, "%.1fs", 5.0f);
-    GLFWwindow* window = glfwCreateWindow(800, 600, (title + timeBuffer).c_str(), nullptr, nullptr);
-    if (!window) {
-        std::cout << "Test failed on window creation"  << std::endl;
+    GLFWwindow *window = glfwCreateWindow(800, 600, (title + timeBuffer).c_str(), nullptr, nullptr);
+    if (!window)
+    {
+        std::cout << "Test failed on window creation" << std::endl;
         glfwTerminate();
         return false;
     }
     glfwMakeContextCurrent(window);
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
         std::cout << "Test failed on loading OpenGL" << std::endl;
         glfwDestroyWindow(window);
         glfwTerminate();
@@ -32,12 +35,16 @@ JNIEXPORT jboolean JNICALL Java_io_coffee_1engine_CoffeeEngine_Test(JNIEnv *env,
     }
     std::cout << glGetString(GL_VERSION) << std::endl;
     const auto start = std::chrono::steady_clock::now();
-    while(!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(window))
+    {
         const std::chrono::duration<double> duration = std::chrono::steady_clock::now() - start;
         const auto sec = duration.count();
-        if (sec >= 5) {
+        if (sec >= 5)
+        {
             glfwSetWindowShouldClose(window, true);
-        } else {
+        }
+        else
+        {
             sprintf(timeBuffer, "%.1fs", 5 - sec);
             glfwSetWindowTitle(window, (title + timeBuffer).c_str());
         }
