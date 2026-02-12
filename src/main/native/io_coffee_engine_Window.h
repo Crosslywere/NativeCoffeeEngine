@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     io_coffee_engine_Window
  * Method:    nCreateWindow
- * Signature: ()Lio/coffee_engine/Window;
+ * Signature: (Ljava/lang/String;Ljava/awt/Dimension;)Lio/coffee_engine/Window;
  */
 JNIEXPORT jobject JNICALL Java_io_coffee_1engine_Window_nCreateWindow
-  (JNIEnv *, jclass);
+  (JNIEnv *, jclass, jstring, jobject);
 
 /*
  * Class:     io_coffee_engine_Window

@@ -2,6 +2,7 @@ package io.coffee_engine;
 
 import io.coffee_engine.util.NativeLoader;
 
+import java.awt.Dimension;
 import java.io.Closeable;
 
 public final class Window implements Closeable {
@@ -10,7 +11,7 @@ public final class Window implements Closeable {
         NativeLoader.loadLibrary("coffee_window");
     }
 
-    private static native Window nCreateWindow();
+    private static native Window nCreateWindow(String window, Dimension d);
 
     private static native void nRun(long handle);
 
@@ -20,8 +21,8 @@ public final class Window implements Closeable {
         this.handle = handle;
     }
 
-    public static Window createWindow() {
-        return nCreateWindow();
+    public static Window createWindow(String title, Dimension dimension) {
+        return nCreateWindow(title, dimension);
     }
 
     public void run() {
