@@ -2,6 +2,8 @@ package io.coffee_engine;
 
 import io.coffee_engine.util.NativeLoader;
 
+import java.awt.*;
+
 public class CoffeeEngine {
 
     static {
@@ -11,7 +13,7 @@ public class CoffeeEngine {
     static native boolean Test();
 
     public static void main(String... args) {
-        try (Window window = Window.createWindow()) {
+        try (Window window = Window.createWindow("Coffee Engine", new Dimension(800, 600))) {
             window.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
