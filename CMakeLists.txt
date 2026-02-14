@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.28)
 project(NativeCoffeeEngine LANGUAGES C CXX)
 find_package(JNI REQUIRED)
+find_package(Vulkan REQUIRED)
 set(NATIVE_DIR "${CMAKE_SOURCE_DIR}/src/main/native")
 add_subdirectory(src/main/native/vendor/glfw)
 include_directories(
     ${JNI_INCLUDE_DIRS}
+    ${Vulkan_INCLUDE_DIRS}
     ${NATIVE_DIR}
     "${NATIVE_DIR}/vendor/glad/include"
 )
@@ -14,13 +16,13 @@ add_library(coffee SHARED
     ${NATIVE_FILES}
     "${NATIVE_DIR}/vendor/glad/src/glad.c"
 )
-target_link_libraries(coffee glfw)
+target_link_libraries(coffee glfw ${Vulkan_LIBRARIES})
 # Window Management
 add_library(coffee_window SHARED
     "${NATIVE_DIR}/WindowImpl.cpp"
     "${NATIVE_DIR}/vendor/glad/src/glad.c"
 )
-target_link_libraries(coffee_window glfw)
+target_link_libraries(coffee_window glfw ${Vulkan_LIBRARIES})
 # Post build copy
 get_target_property(LIB_OUTPUT coffee ARCHIVE_OUTPUT_DIRECTORY)
 set(NATIVE_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/src/main/resources/native")
