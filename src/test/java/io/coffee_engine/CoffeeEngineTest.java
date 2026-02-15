@@ -3,15 +3,17 @@ package io.coffee_engine;
 import org.junit.Assert;
 import org.junit.Test;
 
+import io.coffee_engine.test.TestUtil;
+
 public class CoffeeEngineTest {
 
     @Test
-    public void SimpleTest() {
-        Assert.assertTrue(CoffeeEngine.Test());
+    public void TestOpenGL() {
+        Assert.assertTrue(TestUtil.TestOpenGL());
     }
 
     @Test
     public void TestVulkan() {
-        Assert.assertTrue(CoffeeEngine.TestVulkan());
+        Assert.assertTrue(TestUtil.TestVulkan());
     }
 }
