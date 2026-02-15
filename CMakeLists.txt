@@ -10,13 +10,13 @@ include_directories(
     ${NATIVE_DIR}
     "${NATIVE_DIR}/vendor/glad/include"
 )
-file(GLOB NATIVE_FILES "${NATIVE_DIR}/*.cpp")
-# FOR Testing
-add_library(coffee SHARED
-    ${NATIVE_FILES}
+# Testing Utility
+add_library(coffee_test SHARED
+    "${NATIVE_DIR}/TestUtilImplOpenGL.cpp"
+    "${NATIVE_DIR}/TestUtilImplVulkan.cpp"
     "${NATIVE_DIR}/vendor/glad/src/glad.c"
 )
-target_link_libraries(coffee glfw ${Vulkan_LIBRARIES})
+target_link_libraries(coffee_test glfw ${Vulkan_LIBRARIES})
 # Window Management
 add_library(coffee_window SHARED
     "${NATIVE_DIR}/WindowImpl.cpp"
@@ -24,7 +24,7 @@ add_library(coffee_window SHARED
 )
 target_link_libraries(coffee_window glfw ${Vulkan_LIBRARIES})
 # Post build copy
-get_target_property(LIB_OUTPUT coffee ARCHIVE_OUTPUT_DIRECTORY)
+get_target_property(LIB_OUTPUT coffee_test ARCHIVE_OUTPUT_DIRECTORY)
 set(NATIVE_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/src/main/resources/native")
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(DESTINATION_DIR "${NATIVE_OUTPUT_DIR}/linux")
@@ -38,7 +38,7 @@ endif()
 add_custom_target(copy_to_resources ALL
     COMMAND ${CMAKE_COMMAND} -E make_directory ${DESTINATION_DIR}
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:coffee>
+        $<TARGET_FILE:coffee_test>
         $<TARGET_FILE:coffee_window>
         ${DESTINATION_DIR}
 )
