@@ -54,3 +54,8 @@ JNIEXPORT jboolean JNICALL Java_io_coffee_1engine_CoffeeEngine_Test(JNIEnv *env,
     std::cout << "Tested successfully!" << std::endl;
     return true;
 }
+
+JNIEXPORT jboolean JNICALL Java_io_coffee_1engine_CoffeeEngine_TestVulkan(JNIEnv *, jclass)
+{
+    return false;
+}

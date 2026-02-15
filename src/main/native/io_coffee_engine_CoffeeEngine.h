@@ -15,6 +15,14 @@ extern "C" {
 JNIEXPORT jboolean JNICALL Java_io_coffee_1engine_CoffeeEngine_Test
   (JNIEnv *, jclass);
 
+/*
+ * Class:     io_coffee_engine_CoffeeEngine
+ * Method:    TestVulkan
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_io_coffee_1engine_CoffeeEngine_TestVulkan
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

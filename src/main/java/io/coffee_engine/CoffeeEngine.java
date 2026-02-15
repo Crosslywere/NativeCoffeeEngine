@@ -12,6 +12,8 @@ public class CoffeeEngine {
 
     static native boolean Test();
 
+    static native boolean TestVulkan();
+
     public static void main(String... args) {
         try (Window window = Window.createWindow("Coffee Engine", new Dimension(800, 600))) {
             window.run();

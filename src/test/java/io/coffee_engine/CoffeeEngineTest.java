@@ -9,4 +9,9 @@ public class CoffeeEngineTest {
     public void SimpleTest() {
         Assert.assertTrue(CoffeeEngine.Test());
     }
+
+    @Test
+    public void TestVulkan() {
+        Assert.assertTrue(CoffeeEngine.TestVulkan());
+    }
 }
