@@ -2,54 +2,89 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <cmath>
-
+#include <stdexcept>
 #define TOTAL_RUNTIME 5.0
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
+
+class OpenGLApp
+{
+public:
+    void run()
+    {
+        initWindow();
+        mainLoop();
+        cleanup();
+    }
+
+    const double getTime() const
+    {
+        return time;
+    }
+
+private:
+    void initWindow()
+    {
+        if (!glfwInit())
+        {
+            throw std::runtime_error("Failed to initialize glfw");
+        }
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Testing OpenGL (5s)", nullptr, nullptr);
+        if (!window)
+        {
+            glfwTerminate();
+            throw std::runtime_error("Failed to create window!");
+        }
+        glfwMakeContextCurrent(window);
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        {
+            cleanup();
+            throw std::runtime_error("Failed to load OpenGL function pointers");
+        }
+    }
+
+    void mainLoop()
+    {
+        while (!glfwWindowShouldClose(window))
+        {
+            time = glfwGetTime();
+            if (time >= TOTAL_RUNTIME)
+            {
+                glfwSetWindowShouldClose(window, true);
+            }
+            glClearColor(std::sin(time), std::cos(time), time / TOTAL_RUNTIME, 1);
+            glClear(GL_COLOR_BUFFER_BIT);
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+        }
+    }
+
+    void cleanup()
+    {
+        glfwDestroyWindow(window);
+        glfwTerminate();
+    }
+
+private:
+    GLFWwindow *window;
+    double time = 0.0;
+};
 
 JNIEXPORT jboolean JNICALL Java_io_coffee_1engine_test_TestUtil_TestOpenGL(JNIEnv *env, jclass)
 {
-    jclass runtimeError = env->FindClass("java/lang/RuntimeException");
-    if (!glfwInit())
+    OpenGLApp app;
+    try
     {
-        env->ThrowNew(runtimeError, "Failed on glfwInit");
+        app.run();
+    }
+    catch (std::exception e)
+    {
+        env->ThrowNew(env->FindClass("java/lang/RuntimeException"), e.what());
         return false;
     }
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    GLFWwindow *window = glfwCreateWindow(800, 600, "Testing OpenGL (5s)", nullptr, nullptr);
-    if (!window)
-    {
-        glfwTerminate();
-        env->ThrowNew(runtimeError, "Failed to create window");
-        return false;
-    }
-    glfwMakeContextCurrent(window);
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        glfwDestroyWindow(window);
-        glfwTerminate();
-        env->ThrowNew(runtimeError, "Failed to load OpenGL function pointers");
-        return false;
-    }
-    while (!glfwWindowShouldClose(window))
-    {
-        float time = glfwGetTime();
-        if (time >= TOTAL_RUNTIME)
-        {
-            glfwSetWindowShouldClose(window, true);
-        }
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-        glClearColor(std::sin(time), std::cos(time), time / TOTAL_RUNTIME, 1);
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    }
-    if (glfwGetTime() < TOTAL_RUNTIME)
-    {
-        glfwDestroyWindow(window);
-        glfwTerminate();
-        env->FatalError("Closed window before test concluded!");
-    }
-    glfwDestroyWindow(window);
-    glfwTerminate();
-    return true;
+    return app.getTime() >= TOTAL_RUNTIME;
 }
