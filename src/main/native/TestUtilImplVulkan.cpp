@@ -5,6 +5,8 @@
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.hpp>
 #define TOTAL_RUNTIME 5.0
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 
 class VulkanApp
 {
@@ -30,7 +32,7 @@ private:
         }
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-        window = glfwCreateWindow(800, 600, "Testing Vulkan (5s)", nullptr, nullptr);
+        window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Testing Vulkan (5s)", nullptr, nullptr);
         if (!window)
         {
             glfwTerminate();
