@@ -11,6 +11,13 @@
 class VulkanApp
 {
 public:
+    VulkanApp(JNIEnv *env) : env{env}
+    {
+        jclass systemClass = env->FindClass("java/lang/System");
+        outObject = env->GetStaticObjectField(systemClass, env->GetStaticFieldID(systemClass, "out", "Ljava/io/PrintStream;"));
+        printlnMethod = env->GetMethodID(env->FindClass("java/io/PrintStream"), "println", "(Ljava/lang/String;)V");
+    }
+
     void run()
     {
         initWindow();
@@ -20,6 +27,12 @@ public:
     }
 
 private:
+    void println(const std::string &message) const
+    {
+        jstring str = env->NewStringUTF(message.c_str());
+        env->CallVoidMethod(outObject, printlnMethod, str);
+    }
+
     void initWindow()
     {
         if (!glfwInit())
@@ -108,11 +121,14 @@ private:
 private:
     GLFWwindow *window;
     VkInstance instance;
+    JNIEnv *env;
+    jobject outObject;
+    jmethodID printlnMethod;
 };
 
 JNIEXPORT jboolean JNICALL Java_io_coffee_1engine_test_TestUtil_TestVulkan(JNIEnv *env, jclass)
 {
-    VulkanApp app;
+    VulkanApp app(env);
     try
     {
         app.run();
