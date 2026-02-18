@@ -33,6 +33,9 @@ private:
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+#if defined(__APPLE__)
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+#endif
         window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Testing OpenGL (5s)", nullptr, nullptr);
         if (!window)
         {

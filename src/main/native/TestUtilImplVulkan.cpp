@@ -1,6 +1,6 @@
 #include <io_coffee_engine_test_TestUtil.h>
 #include <stdexcept>
-
+#include <vector>
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.hpp>
@@ -63,11 +63,20 @@ private:
         uint32_t glfwExtensionCount = 0;
         const char **glfwExtensions;
         glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-
+        createInfo.enabledLayerCount = 0;
+#if defined(__APPLE__)
+        std::vector<const char *> requiredExtensions;
+        for (uint32_t i = 0; i < glfwExtensionCount; i++)
+        {
+            requiredExtensions.emplace_back(glfwExtensions[i]);
+        }
+        requiredExtensions.emplace_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+        createInfo.enabledExtensionCount = (uint32_t)requiredExtensions.size();
+        createInfo.ppEnabledExtensionNames = requiredExtensions.data();
+#else
         createInfo.enabledExtensionCount = glfwExtensionCount;
         createInfo.ppEnabledExtensionNames = glfwExtensions;
-
-        createInfo.enabledLayerCount = 0;
+#endif
 
         VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
 
