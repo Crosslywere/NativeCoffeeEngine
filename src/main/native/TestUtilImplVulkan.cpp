@@ -98,6 +98,19 @@ private:
         {
             throw std::runtime_error("Failed to create vulkan instance");
         }
+
+        uint32_t extensionCount = 0;
+        vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+        std::vector<VkExtensionProperties> extensions(extensionCount);
+        vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
+
+        println("Available extensions:");
+        for (const auto &extension : extensions)
+        {
+            std::string message = "\t";
+            message += extension.extensionName;
+            println(message.c_str());
+        }
     }
 
     void mainLoop()
@@ -114,6 +127,7 @@ private:
 
     void cleanup()
     {
+        vkDestroyInstance(instance, nullptr);
         glfwDestroyWindow(window);
         glfwTerminate();
     }
