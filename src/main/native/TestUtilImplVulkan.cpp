@@ -7,15 +7,13 @@
 #define TOTAL_RUNTIME 5.0
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
-
+#include <JavaLogger.hpp>
 class VulkanApp
 {
 public:
-    VulkanApp(JNIEnv *env) : env{env}
+    VulkanApp(JNIEnv *env)
+        : logger{JavaLogger(env)}
     {
-        jclass systemClass = env->FindClass("java/lang/System");
-        outObject = env->GetStaticObjectField(systemClass, env->GetStaticFieldID(systemClass, "out", "Ljava/io/PrintStream;"));
-        printlnMethod = env->GetMethodID(env->FindClass("java/io/PrintStream"), "println", "(Ljava/lang/String;)V");
     }
 
     void run()
@@ -27,12 +25,6 @@ public:
     }
 
 private:
-    void println(const std::string &message) const
-    {
-        jstring str = env->NewStringUTF(message.c_str());
-        env->CallVoidMethod(outObject, printlnMethod, str);
-    }
-
     void initWindow()
     {
         if (!glfwInit())
@@ -104,12 +96,10 @@ private:
         std::vector<VkExtensionProperties> extensions(extensionCount);
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
 
-        println("Available extensions:");
+        logger << "Available extensions:\n";
         for (const auto &extension : extensions)
         {
-            std::string message = "\t";
-            message += extension.extensionName;
-            println(message.c_str());
+            logger << "\t" << extension.extensionName << "\n";
         }
     }
 
@@ -135,9 +125,7 @@ private:
 private:
     GLFWwindow *window;
     VkInstance instance;
-    JNIEnv *env;
-    jobject outObject;
-    jmethodID printlnMethod;
+    JavaLogger logger;
 };
 
 JNIEXPORT jboolean JNICALL Java_io_coffee_1engine_test_TestUtil_TestVulkan(JNIEnv *env, jclass)
